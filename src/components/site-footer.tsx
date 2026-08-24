@@ -15,7 +15,12 @@ export function SiteFooter() {
           <Link to="/help" className="hover:text-foreground">
             Support
           </Link>
-
+          <Link to="/terms" className="hover:text-foreground">
+            Terms
+          </Link>
+          <Link to="/privacy" className="hover:text-foreground">
+            Privacy
+          </Link>
         </nav>
       </div>
     </footer>
