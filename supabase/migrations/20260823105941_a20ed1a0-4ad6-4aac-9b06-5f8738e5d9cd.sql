@@ -1,0 +1,1 @@
+GRANT UPDATE (user_id, token_expires_at) ON public.social_accounts TO authenticated;

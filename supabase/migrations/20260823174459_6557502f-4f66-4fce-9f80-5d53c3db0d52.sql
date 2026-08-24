@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.enforce_offer_update_scope() FROM PUBLIC, anon, authenticated;
