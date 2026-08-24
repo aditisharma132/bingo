@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { LOCATIONS } from "@/lib/taxonomy";
+import { isOrgEmail } from "@/lib/org-email";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -66,7 +67,8 @@ function Signup() {
       ? /^[\p{L}][\p{L}'.-]*(\s+[\p{L}][\p{L}'.-]*)+$/u.test(fullName.trim())
       : fullName.trim().length >= 2;
   const locationValid = LOCATIONS.includes(location as (typeof LOCATIONS)[number]);
-  const formValid = nameValid && locationValid && email.trim().length > 3 && password.length >= 8;
+  const emailValid = email.trim().length > 3 && (accountType === "creator" || isOrgEmail(email));
+  const formValid = nameValid && locationValid && emailValid && password.length >= 8;
 
   function rememberRole() {
     try {
@@ -88,6 +90,10 @@ function Signup() {
     }
     if (!locationValid) {
       toast.error("Pick your location from the list.");
+      return;
+    }
+    if (accountType === "brand" && !isOrgEmail(email)) {
+      toast.error("Use your company email to sign up as a brand — personal webmail isn't allowed.");
       return;
     }
     rememberRole();

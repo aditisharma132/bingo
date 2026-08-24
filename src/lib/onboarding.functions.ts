@@ -137,6 +137,18 @@ export const saveBrandOnboarding = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
+    // Client-side check in signup.tsx is UX only — this is the real gate, since brand
+    // onboarding is also reachable directly by an already-authenticated user.
+    const { data: myProfile } = await supabase
+      .from("profiles")
+      .select("email")
+      .eq("id", userId)
+      .maybeSingle();
+    const { isOrgEmail } = await import("@/lib/org-email");
+    if (myProfile?.email && !isOrgEmail(myProfile.email)) {
+      throw new Error("Brand accounts need a company email — personal webmail isn't allowed.");
+    }
+
     await supabase
       .from("user_roles")
       .upsert(
