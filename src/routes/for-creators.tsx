@@ -4,6 +4,7 @@ import creatorsImage from "@/assets/creators-neon.jpg";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { Button } from "@/components/ui/button";
+import { SITE_URL } from "@/lib/site";
 
 export const Route = createFileRoute("/for-creators")({
   head: () => ({
@@ -14,15 +15,17 @@ export const Route = createFileRoute("/for-creators")({
         content:
           "Bingo ranks UGC creators, editors and influencers by craft and content fit — not follower count. Build a Creator DNA, get briefs, get paid.",
       },
-      { property: "og:title", content: "For Creators & UGC — Get matched by your content | Bingo" },
+      { property: "og:title", content: "Bingo — For Creators & UGC" },
       {
         property: "og:description",
         content:
           "Build a Creator DNA, receive briefs that actually fit your content and get paid the moment work is approved.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/for-creators` },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/for-creators` }],
   }),
   component: ForCreatorsPage,
 });

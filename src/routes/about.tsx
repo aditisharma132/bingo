@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { Button } from "@/components/ui/button";
+import { SITE_URL } from "@/lib/site";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -19,8 +20,10 @@ export const Route = createFileRoute("/about")({
           "Bingo matches creators to brands based on what they actually create, not how many followers they have.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/about` },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/about` }],
   }),
   component: AboutPage,
 });

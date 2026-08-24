@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
+import { SITE_URL } from "@/lib/site";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
@@ -13,8 +14,10 @@ export const Route = createFileRoute("/privacy")({
         content: "What Bingo collects, why, and how you can control it.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/privacy` },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/privacy` }],
   }),
   component: PrivacyPage,
 });

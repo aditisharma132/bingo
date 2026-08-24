@@ -12,3 +12,9 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /login
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /auth/
+
+Sitemap: https://bingo-virid-ten.vercel.app/sitemap.xml

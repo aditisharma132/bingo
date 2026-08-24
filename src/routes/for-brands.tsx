@@ -4,6 +4,7 @@ import brandsImage from "@/assets/brands-neon.jpg";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { Button } from "@/components/ui/button";
+import { SITE_URL } from "@/lib/site";
 
 export const Route = createFileRoute("/for-brands")({
   head: () => ({
@@ -14,15 +15,17 @@ export const Route = createFileRoute("/for-brands")({
         content:
           "Describe a campaign in plain language. Bingo writes the brief and ranks creators by content fit, with the reasons behind every match.",
       },
-      { property: "og:title", content: "For Brands — Campaign briefs and creator shortlists | Bingo" },
+      { property: "og:title", content: "Bingo — For Brands" },
       {
         property: "og:description",
         content:
           "AI briefs, explainable creator shortlists, contract vault and milestone payouts in one marketplace.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/for-brands` },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/for-brands` }],
   }),
   component: ForBrandsPage,
 });

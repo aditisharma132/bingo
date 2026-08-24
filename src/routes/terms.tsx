@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
+import { SITE_URL } from "@/lib/site";
 
 export const Route = createFileRoute("/terms")({
   head: () => ({
@@ -16,8 +17,10 @@ export const Route = createFileRoute("/terms")({
         content: "The terms that govern using Bingo as a creator or a brand.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/terms` },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/terms` }],
   }),
   component: TermsPage,
 });

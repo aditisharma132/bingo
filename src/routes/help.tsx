@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { submitPublicTicket } from "@/lib/public-support.functions";
+import { SITE_URL } from "@/lib/site";
 
 export const Route = createFileRoute("/help")({
   head: () => ({
@@ -24,8 +25,10 @@ export const Route = createFileRoute("/help")({
       { property: "og:title", content: "Support — Raise a ticket with the Bingo team" },
       { property: "og:description", content: "Send the Bingo team a question or report an issue." },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/help` },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/help` }],
   }),
   component: HelpPage,
 });

@@ -8,27 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-
-export const Route = createFileRoute("/faq")({
-  head: () => ({
-    meta: [
-      { title: "FAQ — How Bingo matching, deals and payouts work" },
-      {
-        name: "description",
-        content:
-          "Answers on Creator DNA, how matches are ranked, message requests, secured payments, delivery approval and payouts on Bingo.",
-      },
-      { property: "og:title", content: "FAQ — How Bingo matching, deals and payouts work" },
-      {
-        property: "og:description",
-        content: "Common questions from creators and brands about matching, chat requests, deals and payments.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: FaqPage,
-});
+import { SITE_URL } from "@/lib/site";
 
 const faqs = [
   {
@@ -56,6 +36,40 @@ const faqs = [
     a: "Raise a dispute from the collaboration, or send us a ticket from the support page. Our team reviews both sides before any payout is released.",
   },
 ];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
+export const Route = createFileRoute("/faq")({
+  head: () => ({
+    meta: [
+      { title: "FAQ — How Bingo matching, deals and payouts work" },
+      {
+        name: "description",
+        content:
+          "Answers on Creator DNA, how matches are ranked, message requests, secured payments, delivery approval and payouts on Bingo.",
+      },
+      { property: "og:title", content: "FAQ — How Bingo matching, deals and payouts work" },
+      {
+        property: "og:description",
+        content: "Common questions from creators and brands about matching, chat requests, deals and payments.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/faq` },
+      { name: "twitter:card", content: "summary_large_image" },
+      { "script:ld+json": faqJsonLd },
+    ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/faq` }],
+  }),
+  component: FaqPage,
+});
 
 function FaqPage() {
   return (

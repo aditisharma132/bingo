@@ -6,6 +6,7 @@ import heroImage from "@/assets/hero-neon.jpg";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
+import { SITE_URL } from "@/lib/site";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,8 +24,10 @@ export const Route = createFileRoute("/")({
           "Bingo matches brands with creators by content, not follower count. AI matching, contract vault and instant payouts.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: SITE_URL },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: SITE_URL }],
   }),
   component: Index,
 });

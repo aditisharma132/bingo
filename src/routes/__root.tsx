@@ -15,6 +15,15 @@ import { ThemeProvider } from "@/hooks/use-theme";
 import { Toaster } from "@/components/ui/sonner";
 import { BingoProvider } from "@/lib/bingo-store";
 import { AuthProvider } from "@/hooks/use-auth";
+import { SITE_URL } from "@/lib/site";
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Bingo",
+  url: SITE_URL,
+  description: "Where brands match creators by content, not follower count.",
+};
 
 
 function NotFoundComponent() {
@@ -85,11 +94,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Bingo — Creator Marketplace" },
       { name: "description", content: "Where brands match creators by content, not follower count." },
       { name: "author", content: "Bingo" },
+      { name: "theme-color", content: "#0a0a12" },
       { property: "og:title", content: "Bingo — Creator Marketplace" },
       { property: "og:description", content: "Where brands match creators by content, not follower count." },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Bingo" },
+      { property: "og:image", content: `${SITE_URL}/og-image.jpg` },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:image", content: `${SITE_URL}/og-image.jpg` },
+      { "script:ld+json": organizationJsonLd },
     ],
     links: [
       {

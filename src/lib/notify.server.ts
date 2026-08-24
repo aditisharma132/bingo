@@ -1,4 +1,5 @@
 /* Server-only notification + transactional email fan-out. */
+import { SITE_URL } from "@/lib/site";
 
 export type NotifyPayload = {
   kind: string;
@@ -47,7 +48,7 @@ function safeLinkPath(link?: string | null) {
 
 function emailShell(title: string, body: string, link?: string | null) {
   const path = safeLinkPath(link);
-  const url = path ? `https://bingo.lovable.app${path}` : null;
+  const url = path ? `${SITE_URL}${path}` : null;
   return `<div style="font-family:system-ui,sans-serif;max-width:520px">
     <h2 style="margin:0 0 12px">${escapeHtml(title)}</h2>
     <p style="color:#444;line-height:1.6;white-space:pre-wrap">${escapeHtml(body)}</p>

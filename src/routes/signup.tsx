@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { LOCATIONS } from "@/lib/taxonomy";
 import { isOrgEmail } from "@/lib/org-email";
+import { SITE_URL } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -41,8 +42,10 @@ export const Route = createFileRoute("/signup")({
           "Join Bingo as a creator or brand and start matching on content, not follower count.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/signup` },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/signup` }],
   }),
   validateSearch: signupSearchSchema,
   component: Signup,

@@ -17,6 +17,7 @@ export const Route = createFileRoute("/forgot-password")({
       { property: "og:description", content: "Send yourself a secure link to set a new Bingo password." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   component: ForgotPassword,
