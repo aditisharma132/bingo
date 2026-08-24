@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Loader2, Lock, Mail } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { GoogleAuthButton } from "@/components/google-auth-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,14 +48,6 @@ function Login() {
     navigate({ to: "/dashboard" });
   }
 
-  async function handleGoogle() {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: window.location.origin },
-    });
-    if (error) toast.error("Google sign-in failed. Try email instead.");
-  }
-
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       <div className="relative flex flex-col justify-center px-6 py-12 sm:px-12">
@@ -77,9 +70,9 @@ function Login() {
           <h1 className="mt-8 text-3xl font-bold">Welcome back</h1>
           <p className="mt-2 text-sm text-muted-foreground">Sign in to continue to Bingo.</p>
 
-          <Button variant="outline" className="mt-8 w-full" onClick={handleGoogle} type="button">
-            Continue with Google
-          </Button>
+          <div className="mt-8">
+            <GoogleAuthButton />
+          </div>
 
           <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground">
             <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { ArrowLeft, ArrowRight, Loader2, MailCheck, Rocket, Store } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { GoogleAuthButton } from "@/components/google-auth-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -144,15 +145,6 @@ function Signup() {
     else toast.success("Confirmation email sent again.");
   }
 
-  async function handleGoogle() {
-    rememberRole();
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/onboarding` },
-    });
-    if (error) toast.error("Google sign-up failed. Try email instead.");
-  }
-
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       <aside className="relative hidden flex-col justify-between bg-gradient-brand p-12 text-primary-foreground lg:flex">
@@ -215,9 +207,9 @@ function Signup() {
             ))}
           </div>
 
-          <Button variant="outline" className="mt-6 w-full" type="button" onClick={handleGoogle}>
-            Continue with Google
-          </Button>
+          <div className="mt-6">
+            <GoogleAuthButton onBeforeRedirect={rememberRole} />
+          </div>
 
           <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground">
             <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />

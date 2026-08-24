@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/for-creators")({
   head: () => ({
     meta: [
-      { title: "For Creators & UGC — Get matched by your content | Bingo" },
+      { title: "Bingo — For Creators & UGC" },
       {
         name: "description",
         content:
@@ -68,9 +68,9 @@ function ForCreatorsPage() {
             alt="Creator filming a UGC video in a neon-lit studio"
             width={1536}
             height={1024}
-            className="absolute inset-0 size-full object-cover opacity-25 dark:opacity-55"
+            className="absolute inset-0 size-full object-cover opacity-45 dark:opacity-55"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/75 via-background/85 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/55 to-background/85" />
           <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-28">
             <p className="font-display text-xs uppercase tracking-[0.3em] text-primary">For creators & UGC</p>
             <h1 className="mt-6 max-w-3xl text-5xl font-bold leading-[1.05] sm:text-6xl">

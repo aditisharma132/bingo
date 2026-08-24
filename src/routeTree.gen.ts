@@ -35,6 +35,7 @@ import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authentic
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
 import { Route as AuthenticatedTrendsRouteImport } from './routes/_authenticated/trends'
+import { Route as AuthClerkCallbackRouteImport } from './routes/auth.clerk-callback'
 import { Route as AuthenticatedBrandsBrandIdRouteImport } from './routes/_authenticated/brands.$brandId'
 import { Route as AuthenticatedCampaignsIndexRouteImport } from './routes/_authenticated/campaigns.index'
 import { Route as AuthenticatedCampaignsCampaignIdRouteImport } from './routes/_authenticated/campaigns.$campaignId'
@@ -177,6 +178,11 @@ const AuthenticatedTrendsRoute = AuthenticatedTrendsRouteImport.update({
   path: '/trends',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthClerkCallbackRoute = AuthClerkCallbackRouteImport.update({
+  id: '/auth/clerk-callback',
+  path: '/auth/clerk-callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedBrandsBrandIdRoute =
   AuthenticatedBrandsBrandIdRouteImport.update({
     id: '/brands/$brandId',
@@ -257,6 +263,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/support': typeof AuthenticatedSupportRoute
   '/trends': typeof AuthenticatedTrendsRoute
+  '/auth/clerk-callback': typeof AuthClerkCallbackRoute
   '/brands/$brandId': typeof AuthenticatedBrandsBrandIdRoute
   '/campaigns/$campaignId': typeof AuthenticatedCampaignsCampaignIdRoute
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
@@ -293,6 +300,7 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/support': typeof AuthenticatedSupportRoute
   '/trends': typeof AuthenticatedTrendsRoute
+  '/auth/clerk-callback': typeof AuthClerkCallbackRoute
   '/brands/$brandId': typeof AuthenticatedBrandsBrandIdRoute
   '/campaigns/$campaignId': typeof AuthenticatedCampaignsCampaignIdRoute
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
@@ -331,6 +339,7 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/support': typeof AuthenticatedSupportRoute
   '/_authenticated/trends': typeof AuthenticatedTrendsRoute
+  '/auth/clerk-callback': typeof AuthClerkCallbackRoute
   '/_authenticated/brands/$brandId': typeof AuthenticatedBrandsBrandIdRoute
   '/_authenticated/campaigns/$campaignId': typeof AuthenticatedCampaignsCampaignIdRoute
   '/_authenticated/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
@@ -369,6 +378,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/support'
     | '/trends'
+    | '/auth/clerk-callback'
     | '/brands/$brandId'
     | '/campaigns/$campaignId'
     | '/checkout/$paymentId'
@@ -405,6 +415,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/support'
     | '/trends'
+    | '/auth/clerk-callback'
     | '/brands/$brandId'
     | '/campaigns/$campaignId'
     | '/checkout/$paymentId'
@@ -442,6 +453,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/support'
     | '/_authenticated/trends'
+    | '/auth/clerk-callback'
     | '/_authenticated/brands/$brandId'
     | '/_authenticated/campaigns/$campaignId'
     | '/_authenticated/checkout/$paymentId'
@@ -467,6 +479,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
   TermsRoute: typeof TermsRoute
+  AuthClerkCallbackRoute: typeof AuthClerkCallbackRoute
   ApiPublicInstagramCallbackRoute: typeof ApiPublicInstagramCallbackRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
 }
@@ -655,6 +668,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTrendsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/auth/clerk-callback': {
+      id: '/auth/clerk-callback'
+      path: '/auth/clerk-callback'
+      fullPath: '/auth/clerk-callback'
+      preLoaderRoute: typeof AuthClerkCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/brands/$brandId': {
       id: '/_authenticated/brands/$brandId'
       path: '/brands/$brandId'
@@ -785,6 +805,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
   TermsRoute: TermsRoute,
+  AuthClerkCallbackRoute: AuthClerkCallbackRoute,
   ApiPublicInstagramCallbackRoute: ApiPublicInstagramCallbackRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
 }

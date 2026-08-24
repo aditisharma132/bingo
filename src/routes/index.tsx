@@ -79,9 +79,9 @@ function Index() {
             alt="A neon-lit digital marketplace hero image showing creators and brands connecting on Bingo"
             width={1536}
             height={1024}
-            className="absolute inset-0 size-full object-cover opacity-30 dark:opacity-60"
+            className="absolute inset-0 size-full object-cover opacity-45 dark:opacity-60"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/80 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/55 to-background/85" />
           <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32">
             <p className="font-display text-xs uppercase tracking-[0.3em] text-primary">
               Find creators by content, not follower count
