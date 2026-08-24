@@ -30,6 +30,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { useTheme } from "@/hooks/use-theme";
 import { listConversations } from "@/lib/messaging.functions";
 import { listNotifications } from "@/lib/social.functions";
+import logoDark from "@/assets/logo-dark.jpg";
+import logoLight from "@/assets/logo-light.jpg";
 
 const publicLinks = [
   { to: "/for-creators", label: "For Creators" },
@@ -179,6 +181,7 @@ function AccountMenu() {
 export function SiteNav() {
   const [open, setOpen] = useState(false);
   const { user, role, signOut } = useAuth();
+  const { theme } = useTheme();
   const navigate = useNavigate();
 
   const links = user ? (role === "admin" ? adminLinks : role === "brand" ? brandLinks : creatorLinks) : publicLinks;
@@ -186,11 +189,12 @@ export function SiteNav() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 shadow-sm backdrop-blur-xl supports-[backdrop-filter]:bg-background/85">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6">
-        <Link to="/" className="flex items-center gap-2">
-          <span className="grid size-8 place-items-center rounded-lg bg-gradient-brand font-display text-sm font-bold text-primary-foreground">
-            B
-          </span>
-          <span className="font-display text-lg font-bold tracking-tight">Bingo</span>
+        <Link to="/" className="flex items-center">
+          <img
+            src={theme === "dark" ? logoDark : logoLight}
+            alt="Bingo"
+            className="h-9 w-auto rounded-md"
+          />
         </Link>
 
         <nav className="ml-6 hidden items-center gap-1 md:flex">
