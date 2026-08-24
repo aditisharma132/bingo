@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { ArrowRight, BarChart3, ShieldCheck, Sparkles, Wallet } from "lucide-react";
 import heroImage from "@/assets/hero-neon.jpg";
@@ -55,36 +55,115 @@ const features = [
   },
 ];
 
-/* Mirrors the "balanced" profile weights in matching.ts's scoreCreator() — same
-   numbers the engine actually scores with, not illustrative ones. */
-const scoringSignals = [
-  { label: "Category fit", value: 30, note: "Their content categories against the campaign's" },
-  { label: "Creator type fit", value: 25, note: "UGC, influencer or editor — matched to what the brief needs" },
-  { label: "Content relevance", value: 18, note: "Bio and past work read against the brief, not follower count" },
-  { label: "Budget fit", value: 15, note: "Their rate against the campaign's budget range" },
-  { label: "Compensation fit", value: 7, note: "Paid, barter or hybrid preference match" },
-  { label: "Location fit", value: 5, note: "Only weighted when the brief calls for it" },
+/* Same six signals scoreCreator() actually weighs in matching.ts — not illustrative. */
+const SIGNALS = [
+  { label: "Category", angle: -90 },
+  { label: "Creator type", angle: -30 },
+  { label: "Content", angle: 30 },
+  { label: "Budget", angle: 90 },
+  { label: "Compensation", angle: 150 },
+  { label: "Location", angle: 210 },
 ];
 
-function ScoreBar({ label, value, note }: { label: string; value: number; note: string }) {
-  const [filled, setFilled] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setFilled(true), 80);
-    return () => clearTimeout(t);
-  }, []);
+const VIS_SIZE = 320;
+const VIS_CENTER = VIS_SIZE / 2;
+const VIS_RADIUS = 118;
+const SIGNAL_NODES = SIGNALS.map((s) => {
+  const rad = (s.angle * Math.PI) / 180;
+  return { label: s.label, x: VIS_CENTER + VIS_RADIUS * Math.cos(rad), y: VIS_CENTER + VIS_RADIUS * Math.sin(rad) };
+});
+
+/** An "AI analyzing" visual: a scoring core connected to each signal it reads, tilting
+ * in 3D toward the pointer and lighting up whichever signal the pointer is nearest.
+ * All position math runs through refs (not React state) so mousemove never re-renders. */
+function AiEngineVisual() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const coreRef = useRef<HTMLDivElement>(null);
+  const nodeRefs = useRef<Array<HTMLDivElement | null>>([]);
+
+  function handleMove(e: React.MouseEvent<HTMLDivElement>) {
+    const el = wrapRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const scale = VIS_SIZE / rect.width;
+    const px = (e.clientX - rect.left) * scale;
+    const py = (e.clientY - rect.top) * scale;
+    const nx = px / VIS_SIZE - 0.5;
+    const ny = py / VIS_SIZE - 0.5;
+
+    el.style.setProperty("--tiltY", `${(nx * 16).toFixed(2)}deg`);
+    el.style.setProperty("--tiltX", `${(-ny * 16).toFixed(2)}deg`);
+    if (coreRef.current) coreRef.current.style.transform = `translate(${(nx * 10).toFixed(1)}px, ${(ny * 10).toFixed(1)}px)`;
+
+    SIGNAL_NODES.forEach((p, i) => {
+      const near = Math.max(0, 1 - Math.hypot(px - p.x, py - p.y) / 130);
+      nodeRefs.current[i]?.style.setProperty("--near", near.toFixed(3));
+    });
+  }
+
+  function handleLeave() {
+    const el = wrapRef.current;
+    if (!el) return;
+    el.style.setProperty("--tiltX", "0deg");
+    el.style.setProperty("--tiltY", "0deg");
+    if (coreRef.current) coreRef.current.style.transform = "translate(0,0)";
+    nodeRefs.current.forEach((n) => n?.style.setProperty("--near", "0"));
+  }
+
   return (
-    <div>
-      <div className="flex items-baseline justify-between text-sm">
-        <span className="font-medium">{label}</span>
-        <span className="text-muted-foreground">{value}%</span>
-      </div>
-      <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-muted">
+    <div
+      ref={wrapRef}
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+      className="relative mx-auto aspect-square w-full max-w-sm [perspective:900px]"
+    >
+      <div className="absolute inset-0 animate-spin [animation-duration:16s] rounded-full opacity-30 blur-2xl [background:conic-gradient(from_0deg,var(--primary),transparent_35%,transparent_65%,var(--primary))]" />
+      <div
+        className="relative size-full transition-transform duration-150 ease-out [transform-style:preserve-3d]"
+        style={{ transform: "rotateX(var(--tiltX,0deg)) rotateY(var(--tiltY,0deg))" }}
+      >
+        <svg viewBox={`0 0 ${VIS_SIZE} ${VIS_SIZE}`} className="absolute inset-0 size-full">
+          {SIGNAL_NODES.map((p) => (
+            <line
+              key={p.label}
+              x1={VIS_CENTER}
+              y1={VIS_CENTER}
+              x2={p.x}
+              y2={p.y}
+              className="stroke-primary"
+              strokeWidth={1}
+              opacity={0.3}
+            />
+          ))}
+        </svg>
+        {SIGNAL_NODES.map((p, i) => (
+          <div
+            key={p.label}
+            ref={(el) => {
+              nodeRefs.current[i] = el;
+            }}
+            className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1.5"
+            style={{ left: `${(p.x / VIS_SIZE) * 100}%`, top: `${(p.y / VIS_SIZE) * 100}%` }}
+          >
+            <span
+              className="block size-2.5 rounded-full bg-primary transition-transform duration-150"
+              style={{
+                transform: "scale(calc(1 + var(--near, 0) * 1.1))",
+                boxShadow: "0 0 calc(var(--near, 0) * 20px) var(--primary)",
+              }}
+            />
+            <span className="whitespace-nowrap text-[10px] font-medium text-muted-foreground">{p.label}</span>
+          </div>
+        ))}
         <div
-          className="h-full rounded-full bg-gradient-brand transition-[width] duration-700 ease-out"
-          style={{ width: filled ? `${value}%` : "0%" }}
-        />
+          ref={coreRef}
+          className="absolute left-1/2 top-1/2 grid size-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-gradient-brand text-center text-xs font-bold leading-tight text-primary-foreground glow-primary transition-transform duration-150"
+        >
+          AI
+          <br />
+          Score
+        </div>
       </div>
-      <p className="mt-1 text-xs text-muted-foreground">{note}</p>
     </div>
   );
 }
@@ -171,28 +250,27 @@ function Index() {
         </section>
 
         <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
-          <p className="font-display text-xs uppercase tracking-[0.3em] text-primary">How it works</p>
-          <h2 className="mt-3 text-3xl font-bold sm:text-4xl">How the AI actually scores a match</h2>
-          <p className="mt-3 max-w-xl text-muted-foreground">
-            Every campaign-creator pair is scored on the same signals — no black box. These are the
-            live weights the engine uses today.
-          </p>
-          <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:items-center">
-            <div className="space-y-5">
-              {scoringSignals.map((s) => (
-                <ScoreBar key={s.label} {...s} />
-              ))}
-            </div>
-            <div className="rounded-2xl border border-border bg-card p-6">
-              <p className="flex items-center gap-2 text-sm font-medium text-primary">
-                <Sparkles className="size-4" /> Learns from feedback
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <div>
+              <p className="font-display text-xs uppercase tracking-[0.3em] text-primary">How it works</p>
+              <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
+                An AI engine reading your profile in real time
+              </h2>
+              <p className="mt-4 text-muted-foreground">
+                Every campaign-creator pair runs through the same scoring core: category, creator
+                type, content relevance, budget, compensation and location. No black box — every
+                match ships with the reasons that produced it.
               </p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                When a brand accepts or passes on a match, Bingo nudges its ranking weights for that
-                brand's future campaigns — never a global change, and always starting from pure
-                content fit with no follower-count shortcut.
+              <p className="mt-4 text-muted-foreground">
+                Bingo also reads a creator's bio, past work and captions to classify their category
+                and craft, and adjusts a brand's own ranking weights every time they accept or pass
+                on a match — never a global change, always starting from pure content fit.
+              </p>
+              <p className="mt-6 flex items-center gap-2 text-sm font-medium text-primary">
+                <Sparkles className="size-4" /> Move your cursor over the core to see it work
               </p>
             </div>
+            <AiEngineVisual />
           </div>
         </section>
 
