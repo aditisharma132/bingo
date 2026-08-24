@@ -53,10 +53,10 @@ const features = [
 ];
 
 const stats = [
-  { value: "1.2M", label: "Monthly creator reach" },
-  { value: "$12,450", label: "Avg. creator earnings" },
-  { value: "98%", label: "Top match accuracy" },
-  { value: "24h", label: "Median deal turnaround" },
+  { value: "AI-matched", label: "Every match, with the reason it fits" },
+  { value: "0", label: "Follower minimums" },
+  { value: "Escrow", label: "Payouts released on approval" },
+  { value: "UGC-first", label: "Scored on craft, not reach" },
 ];
 
 function Index() {
@@ -87,11 +87,11 @@ function Index() {
               Find creators by content, not follower count
             </p>
             <h1 className="mt-6 max-w-3xl text-5xl font-bold leading-[1.05] sm:text-7xl">
-              Discover the creator-brand matches your campaign is missing
+              AI-matched collaborations, backed by real content fit
             </h1>
             <p className="mt-6 max-w-xl text-base text-muted-foreground sm:text-lg">
-              Join the next generation platform where true talent meets opportunity in a neon-drenched digital
-              ecosystem.
+              Bingo reads a creator's actual work and a brand's brief, then explains exactly why they
+              match. No cold DMs, no follower thresholds, no guesswork.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <Button asChild size="lg" className="bg-gradient-brand text-primary-foreground glow-primary hover:opacity-90">
