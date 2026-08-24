@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { ArrowRight, BarChart3, ShieldCheck, Sparkles, Wallet } from "lucide-react";
 import heroImage from "@/assets/hero-neon.jpg";
@@ -54,6 +54,40 @@ const features = [
     body: "Campaign performance, sales and clicks, and top creator rankings in one dashboard.",
   },
 ];
+
+/* Mirrors the "balanced" profile weights in matching.ts's scoreCreator() — same
+   numbers the engine actually scores with, not illustrative ones. */
+const scoringSignals = [
+  { label: "Category fit", value: 30, note: "Their content categories against the campaign's" },
+  { label: "Creator type fit", value: 25, note: "UGC, influencer or editor — matched to what the brief needs" },
+  { label: "Content relevance", value: 18, note: "Bio and past work read against the brief, not follower count" },
+  { label: "Budget fit", value: 15, note: "Their rate against the campaign's budget range" },
+  { label: "Compensation fit", value: 7, note: "Paid, barter or hybrid preference match" },
+  { label: "Location fit", value: 5, note: "Only weighted when the brief calls for it" },
+];
+
+function ScoreBar({ label, value, note }: { label: string; value: number; note: string }) {
+  const [filled, setFilled] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setFilled(true), 80);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <div>
+      <div className="flex items-baseline justify-between text-sm">
+        <span className="font-medium">{label}</span>
+        <span className="text-muted-foreground">{value}%</span>
+      </div>
+      <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-muted">
+        <div
+          className="h-full rounded-full bg-gradient-brand transition-[width] duration-700 ease-out"
+          style={{ width: filled ? `${value}%` : "0%" }}
+        />
+      </div>
+      <p className="mt-1 text-xs text-muted-foreground">{note}</p>
+    </div>
+  );
+}
 
 const stats = [
   { value: "AI-matched", label: "Every match, with the reason it fits" },
@@ -133,6 +167,32 @@ function Index() {
                 <p className="mt-2 text-sm text-muted-foreground">{feature.body}</p>
               </article>
             ))}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+          <p className="font-display text-xs uppercase tracking-[0.3em] text-primary">How it works</p>
+          <h2 className="mt-3 text-3xl font-bold sm:text-4xl">How the AI actually scores a match</h2>
+          <p className="mt-3 max-w-xl text-muted-foreground">
+            Every campaign-creator pair is scored on the same signals — no black box. These are the
+            live weights the engine uses today.
+          </p>
+          <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:items-center">
+            <div className="space-y-5">
+              {scoringSignals.map((s) => (
+                <ScoreBar key={s.label} {...s} />
+              ))}
+            </div>
+            <div className="rounded-2xl border border-border bg-card p-6">
+              <p className="flex items-center gap-2 text-sm font-medium text-primary">
+                <Sparkles className="size-4" /> Learns from feedback
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                When a brand accepts or passes on a match, Bingo nudges its ranking weights for that
+                brand's future campaigns — never a global change, and always starting from pure
+                content fit with no follower-count shortcut.
+              </p>
+            </div>
           </div>
         </section>
 
