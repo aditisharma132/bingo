@@ -663,11 +663,9 @@ function MatchCard({
         ))}
       </div>
 
-      <p className="mt-3 text-sm">
-        <span className="text-muted-foreground">
-          Why {creator?.display_name ?? "this creator"} fits{" "}
-        </span>
-        <span className="font-medium">{campaignTitle}</span>
+      <p className="mt-3 flex items-center gap-1 text-xs font-medium text-primary">
+        <Sparkles className="size-3.5" /> Why AI matched {creator?.display_name ?? "this creator"} to{" "}
+        {campaignTitle}
       </p>
       <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
         {match.reasons.map((r) => (

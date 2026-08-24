@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Chip, EmptyState, FitBadge, PageHeader, Panel } from "@/components/bingo-ui";
@@ -209,7 +209,10 @@ function Section(props: {
                   <Chip key={c} label={c} />
                 ))}
               </div>
-              <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
+              <p className="mt-3 flex items-center gap-1 text-xs font-medium text-primary">
+                <Sparkles className="size-3.5" /> Why AI matched this
+              </p>
+              <ul className="mt-1 space-y-1 text-sm text-muted-foreground">
                 {row.reasons.map((r) => (
                   <li key={r}>• {r}</li>
                 ))}
