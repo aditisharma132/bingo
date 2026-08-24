@@ -30,8 +30,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { useTheme } from "@/hooks/use-theme";
 import { listConversations } from "@/lib/messaging.functions";
 import { listNotifications } from "@/lib/social.functions";
-import logoDark from "@/assets/logo-dark.jpg";
-import logoLight from "@/assets/logo-light.jpg";
+import logoDark from "@/assets/logo-dark.png";
+import logoLight from "@/assets/logo-light.png";
 
 const publicLinks = [
   { to: "/for-creators", label: "For Creators" },
@@ -96,7 +96,10 @@ function MessagesIcon() {
     queryFn: () => fetchConversations({ data: undefined }),
     refetchInterval: 60_000,
   });
-  const unread = (data ?? []).reduce((sum: number, c: { unread: number }) => sum + (c.unread ?? 0), 0);
+  const unread = (data ?? []).reduce(
+    (sum: number, c: { unread: number }) => sum + (c.unread ?? 0),
+    0,
+  );
 
   return (
     <Link
@@ -136,10 +139,14 @@ function AccountMenu() {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="flex flex-col">
           <span className="truncate">{displayName || "Account"}</span>
-          <span className="text-xs font-normal capitalize text-muted-foreground">{role ?? "member"}</span>
+          <span className="text-xs font-normal capitalize text-muted-foreground">
+            {role ?? "member"}
+          </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={() => navigate({ to: "/profile", search: { tab: "edit" as const } })}>
+        <DropdownMenuItem
+          onSelect={() => navigate({ to: "/profile", search: { tab: "edit" as const } })}
+        >
           <UserRound className="mr-2 size-4" /> Edit profile
         </DropdownMenuItem>
         {publicHref ? (
@@ -147,7 +154,9 @@ function AccountMenu() {
             <Eye className="mr-2 size-4" /> View public profile
           </DropdownMenuItem>
         ) : null}
-        <DropdownMenuItem onSelect={() => navigate({ to: "/profile", search: { tab: "settings" as const } })}>
+        <DropdownMenuItem
+          onSelect={() => navigate({ to: "/profile", search: { tab: "settings" as const } })}
+        >
           <Settings className="mr-2 size-4" /> Settings
         </DropdownMenuItem>
         <DropdownMenuItem onSelect={() => navigate({ to: "/notification-preferences" })}>
@@ -160,7 +169,12 @@ function AccountMenu() {
           <LifeBuoy className="mr-2 size-4" /> Support
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={(e) => { e.preventDefault(); toggleTheme(); }}>
+        <DropdownMenuItem
+          onSelect={(e) => {
+            e.preventDefault();
+            toggleTheme();
+          }}
+        >
           {theme === "dark" ? <Sun className="mr-2 size-4" /> : <Moon className="mr-2 size-4" />}
           {theme === "dark" ? "Light mode" : "Dark mode"}
         </DropdownMenuItem>
@@ -184,17 +198,19 @@ export function SiteNav() {
   const { theme } = useTheme();
   const navigate = useNavigate();
 
-  const links = user ? (role === "admin" ? adminLinks : role === "brand" ? brandLinks : creatorLinks) : publicLinks;
+  const links = user
+    ? role === "admin"
+      ? adminLinks
+      : role === "brand"
+        ? brandLinks
+        : creatorLinks
+    : publicLinks;
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 shadow-sm backdrop-blur-xl supports-[backdrop-filter]:bg-background/85">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6">
-        <Link to="/" className="flex items-center">
-          <img
-            src={theme === "dark" ? logoDark : logoLight}
-            alt="Bingo"
-            className="h-9 w-auto rounded-md"
-          />
+        <Link to="/" className="flex shrink-0 items-center">
+          <img src={theme === "dark" ? logoDark : logoLight} alt="Bingo" className="h-12 w-auto" />
         </Link>
 
         <nav className="ml-6 hidden items-center gap-1 md:flex">
@@ -235,7 +251,11 @@ export function SiteNav() {
               <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
                 <Link to="/login">Log in</Link>
               </Button>
-              <Button asChild size="sm" className="bg-gradient-brand text-primary-foreground glow-primary hover:opacity-90">
+              <Button
+                asChild
+                size="sm"
+                className="bg-gradient-brand text-primary-foreground glow-primary hover:opacity-90"
+              >
                 <Link to="/signup">Join Bingo</Link>
               </Button>
             </>

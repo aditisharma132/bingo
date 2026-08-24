@@ -36,3 +36,6 @@ research/
 *.njsproj
 *.sln
 *.sw?
+
+.vercel
+.env*
