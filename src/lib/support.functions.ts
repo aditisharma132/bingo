@@ -53,7 +53,7 @@ export const createTicket = createServerFn({ method: "POST" })
     });
     if (error) throw new Error(error.message);
 
-    const { sendEmail } = await import("@/lib/notify.server");
+    const { sendEmail, notifyAdmins } = await import("@/lib/notify.server");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: me } = await supabaseAdmin.from("profiles").select("email").eq("id", userId).maybeSingle();
     if (me?.email) {
@@ -63,6 +63,12 @@ export const createTicket = createServerFn({ method: "POST" })
         html: `<p>Thanks for reaching out. Our team will reply about “${data.subject.trim()}” shortly.</p>`,
       });
     }
+    await notifyAdmins({
+      kind: "support_ticket",
+      title: `New support ticket: ${data.subject.trim()}`,
+      body: `${me?.email ?? "A user"} wrote: ${data.body.trim()}`,
+      link: "/admin",
+    });
     return { ok: true };
   });
 
@@ -87,12 +93,18 @@ export const raiseDispute = createServerFn({ method: "POST" })
     });
     if (error) throw new Error(error.message);
 
-    const { notifyDealParties } = await import("@/lib/notify.server");
+    const { notifyDealParties, notifyAdmins } = await import("@/lib/notify.server");
     await notifyDealParties(data.dealId, {
       kind: "dispute",
       title: "A dispute was raised",
       body: `Reason: ${data.reason.trim()}. Our team will review and get in touch.`,
       link: `/deals/${data.dealId}`,
+    });
+    await notifyAdmins({
+      kind: "dispute",
+      title: `New dispute: ${data.reason.trim()}`,
+      body: data.details.trim() || "No further details provided.",
+      link: `/admin`,
     });
     return { ok: true };
   });

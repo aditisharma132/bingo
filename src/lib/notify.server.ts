@@ -98,6 +98,13 @@ export async function notifyDealParties(dealId: string, payload: NotifyPayload) 
   await notifyUsersDeep([creator?.user_id, brand?.user_id].filter(Boolean), payload);
 }
 
+/** Notifies every admin user (in-app + email) — used for support tickets and disputes. */
+export async function notifyAdmins(payload: NotifyPayload) {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data } = await supabaseAdmin.from("user_roles").select("user_id").eq("role", "admin");
+  await notifyUsersDeep((data ?? []).map((r) => r.user_id), payload);
+}
+
 export async function sendWelcomeEmail(userId: string, name: string, role: "creator" | "brand") {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data } = await supabaseAdmin.from("profiles").select("email").eq("id", userId).maybeSingle();

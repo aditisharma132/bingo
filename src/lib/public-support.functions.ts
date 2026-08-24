@@ -19,11 +19,17 @@ export const submitPublicTicket = createServerFn({ method: "POST" })
     });
     if (error) throw new Error(error.message);
 
-    const { sendEmail } = await import("@/lib/notify.server");
+    const { sendEmail, notifyAdmins } = await import("@/lib/notify.server");
     await sendEmail({
       to: data.email,
       subject: "We've got your message",
       html: `<p>Thanks for reaching out to Bingo. Our team will reply about “${data.subject}” shortly.</p>`,
+    });
+    await notifyAdmins({
+      kind: "support_ticket",
+      title: `New support ticket: ${data.subject}`,
+      body: `${data.email} wrote: ${data.body}`,
+      link: "/admin",
     });
     return { ok: true };
   });
